@@ -5,21 +5,15 @@ tavern.Add(Username).Required()
 ```
 
 ```go
-tavern.Add(Username).Length(0, 3)
+tavern.Add(Username).Min(10).Max(30)
 ```
 
 ```go
-tavern.Add(Username).Longer(10)
-tavern.Add(Username).Shorter(30)
+tavern.Add(Username).Length(10, 30)
 ```
 
 ```go
-tavern.Add(Number).Range(0, 26)
-```
-
-```go
-tavern.Add(Age).Greater(30)
-tavern.Add(Age).Lesser(99)
+tavern.Add(Number).Range(10, 30)
 ```
 
 ```go
@@ -42,8 +36,8 @@ tavern.Add(IPAddress).IP("v6")
 ```
 
 ```go
-tavern.Add(Gender).URL()
-tavern.Add(Gender).URL("https://", "http://")
+tavern.Add(Website).URL()
+tavern.Add(Website).URL("https://", "http://")
 ```
 
 ```go
@@ -54,7 +48,33 @@ tavern.Add(ConfirmPassword).Equal(Password)
 tavern.Add(Username).RegExp("a-Z0-9")
 ```
 
-```go
-tavern.Add(IPAddress).IP("v4").
-      .Add(Age).Max(99)
+```
+err := tavern.Add(IPAddress).IP().
+	Add(Website).URL().
+	Add(Username).Required().
+	Check()
+if err != nil {
+	panic(err)
+}
+```
+
+```
+errs := tavern.Add(IPAddress).IP().
+	Add(Website).URL().
+	Add(Username).Required().
+	CheckAll()
+if errs != nil {
+	for _, v := range errs {
+		fmt.Println(v.Error())
+	}
+}
+```
+
+```
+err := tavern.Add(Username).Length(6, 32).Required().
+	Error(tavern.ErrorMessages{
+		Length:   "使用者帳號的長度不對，應是 6 到 32 個字。",
+		Required: "使用者帳號為必填選項。",
+	}).
+	Check()
 ```
