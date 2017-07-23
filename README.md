@@ -48,7 +48,7 @@ tavern.Add(ConfirmPassword).Equal(Password)
 tavern.Add(Username).RegExp("a-Z0-9")
 ```
 
-```
+```go
 err := tavern.Add(IPAddress).IP().
 	Add(Website).URL().
 	Add(Username).Required().
@@ -58,7 +58,7 @@ if err != nil {
 }
 ```
 
-```
+```go
 errs := tavern.Add(IPAddress).IP().
 	Add(Website).URL().
 	Add(Username).Required().
@@ -70,7 +70,7 @@ if errs != nil {
 }
 ```
 
-```
+```go
 err := tavern.Add(Username).Length(6, 32).Required().
 	Error(tavern.ErrorMessages{
 		Length:   "使用者帳號的長度不對，應是 6 到 32 個字。",
