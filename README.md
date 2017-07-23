@@ -72,9 +72,15 @@ if errs != nil {
 
 ```go
 err := tavern.Add(Username).Length(6, 32).Required().
-	Error(tavern.ErrorMessages{
-		Length:   "使用者帳號的長度不對，應是 6 到 32 個字。",
-		Required: "使用者帳號為必填選項。",
+	Error(errors.New("使用者帳號欄位錯誤。")).
+	Check()
+```
+
+```go
+err := tavern.Add(Username).Length(6, 32).Required().
+	Error(tavern.E{
+		Length:   errors.New("使用者帳號的長度不對，應是 6 到 32 個字。"),
+		Required: errors.New("使用者帳號為必填選項。"),
 	}).
 	Check()
 ```
