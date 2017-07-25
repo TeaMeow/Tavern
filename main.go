@@ -130,7 +130,9 @@ func (t *Tavern) In(values ...interface{}) *Tavern {
 
 func (t *Tavern) IP(typ ...string) *Tavern {
 	r := t.lastRule()
-	r.ip = typ[0]
+	if len(typ) == 1 {
+		r.ip = typ[0]
+	}
 	r.hasIP = true
 	return t
 }
@@ -267,6 +269,14 @@ func (r *rule) check() error {
 		return err
 	}
 	err = r.checkDate()
+	if err != nil {
+		return err
+	}
+	err = r.checkEmail()
+	if err != nil {
+		return err
+	}
+	err = r.checkIn()
 	if err != nil {
 		return err
 	}
@@ -418,6 +428,53 @@ func (r *rule) checkDate() error {
 	return nil
 }
 
+func (r *rule) checkEmail() error {
+	if !r.email || (!r.required && r.stringValue == "") {
+		return nil
+	}
+
+	var isErr bool
+	m, err := regexp.Match(`\S+@\S+`, []byte(r.stringValue))
+	if !m || err != nil {
+		isErr = true
+	}
+	if isErr {
+		if r.errMessages.Email != nil {
+			return r.errMessages.Email
+		}
+		if r.err != nil {
+			return r.err
+		}
+		return errors.New("Required value but it's empty.")
+	}
+	return nil
+}
+
+func (r *rule) checkIn() error {
+	if !r.hasIn {
+		return nil
+	}
+	var isErr bool
+	isErr = true
+	for _, v := range r.in {
+
+		if r.value == v {
+			isErr = false
+			break
+		}
+	}
+	if isErr {
+		if r.errMessages.In != nil {
+			return r.errMessages.In
+		}
+		if r.err != nil {
+			return r.err
+		}
+		return errors.New("Required value but it's empty.")
+	}
+	return nil
+}
+
 func (r *rule) checkIP() error {
 	if !r.hasIP {
 		return nil
@@ -459,13 +516,16 @@ func (r *rule) checkURL() error {
 	}
 
 	var isErr bool
+	isErr = true
 	_, err := url.ParseRequestURI(r.stringValue)
-	if err != nil {
+	if err == nil {
+		isErr = false
+	}
+	if len(r.url) != 0 {
 		isErr = true
-	} else {
 		for _, v := range r.url {
-			if !strings.HasPrefix(r.stringValue, v) {
-				isErr = true
+			if strings.HasPrefix(r.stringValue, v) {
+				isErr = false
 				break
 			}
 		}
