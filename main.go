@@ -10,23 +10,28 @@ import (
 	"time"
 )
 
+// Add adds a new value to Tavern, so you can create the rules for it later on.
 func Add(value interface{}) *Tavern {
 	t := &Tavern{}
 	return t.Add(value)
 }
 
+// E is used to create the custom error messages.
 type E struct {
 	Length, Range, Min, Max, Date, Email, In, IP, URL, Equal, RegExp, Required error
 }
 
+// Tavern represents the main struct for storing the rules.
 type Tavern struct {
 	rules []rule
 }
 
+// lastRule returns the pointer to the latest added rule.
 func (t *Tavern) lastRule() *rule {
 	return &t.rules[len(t.rules)-1]
 }
 
+// Add adds another value to check.
 func (t *Tavern) Add(value interface{}) *Tavern {
 	r := rule{}
 	switch v := value.(type) {
@@ -80,6 +85,7 @@ func (t *Tavern) Add(value interface{}) *Tavern {
 	return t
 }
 
+// Length adds the rule for checking the length of the number, or the string.
 func (t *Tavern) Length(min, max int) *Tavern {
 	r := t.lastRule()
 	r.length = [2]int{min, max}
@@ -87,6 +93,7 @@ func (t *Tavern) Length(min, max int) *Tavern {
 	return t
 }
 
+// Range adds the rule for checking the range of the number.
 func (t *Tavern) Range(min, max int) *Tavern {
 	r := t.lastRule()
 	r.rangeList = [2]int{min, max}
@@ -94,6 +101,7 @@ func (t *Tavern) Range(min, max int) *Tavern {
 	return t
 }
 
+// Min adds the rule for checking the minimal length of the string, or the range if the value is a number.
 func (t *Tavern) Min(min int) *Tavern {
 	r := t.lastRule()
 	r.min = min
@@ -101,6 +109,7 @@ func (t *Tavern) Min(min int) *Tavern {
 	return t
 }
 
+// Max adds the rule for checking the maximum length of the string, or the range if the value is a number.
 func (t *Tavern) Max(max int) *Tavern {
 	r := t.lastRule()
 	r.max = max
@@ -108,6 +117,7 @@ func (t *Tavern) Max(max int) *Tavern {
 	return t
 }
 
+// Date adds the rule for checking the date format of the string.
 func (t *Tavern) Date(formats ...string) *Tavern {
 	r := t.lastRule()
 	r.date = formats
@@ -115,12 +125,15 @@ func (t *Tavern) Date(formats ...string) *Tavern {
 	return t
 }
 
+// Email adds the rule for making sure the string is an email address, but it uses a very simple regexp for the validation,
+// some weird email addresses are still allowed. You should send the email to the address to validate it.
 func (t *Tavern) Email() *Tavern {
 	r := t.lastRule()
 	r.email = true
 	return t
 }
 
+// In adds the rule for making sure the value is the same as the one of the list.
 func (t *Tavern) In(values ...interface{}) *Tavern {
 	r := t.lastRule()
 	r.in = values
@@ -128,6 +141,8 @@ func (t *Tavern) In(values ...interface{}) *Tavern {
 	return t
 }
 
+// IP adds the rule for checking the value is an IP address, the type could be `v4` or `v6`,
+// leave it blank if it could either be an IPv4 or an IPv6.
 func (t *Tavern) IP(typ ...string) *Tavern {
 	r := t.lastRule()
 	if len(typ) == 1 {
@@ -137,6 +152,7 @@ func (t *Tavern) IP(typ ...string) *Tavern {
 	return t
 }
 
+// URL adds the rule for making sure the string is an URL address.
 func (t *Tavern) URL(contains ...string) *Tavern {
 	r := t.lastRule()
 	r.url = contains
@@ -144,6 +160,7 @@ func (t *Tavern) URL(contains ...string) *Tavern {
 	return t
 }
 
+// Equal adds the rule to comparing two values are the same or not.
 func (t *Tavern) Equal(compare interface{}) *Tavern {
 	r := t.lastRule()
 	r.equal = compare
@@ -151,6 +168,7 @@ func (t *Tavern) Equal(compare interface{}) *Tavern {
 	return t
 }
 
+// RegExp adds the rule to validate the string via RegExp.
 func (t *Tavern) RegExp(reg string) *Tavern {
 	r := t.lastRule()
 	r.regexp = reg
@@ -158,12 +176,15 @@ func (t *Tavern) RegExp(reg string) *Tavern {
 	return t
 }
 
+// Required adds the rule to make sure the value is not empty, or only spaces.
 func (t *Tavern) Required() *Tavern {
 	r := t.lastRule()
 	r.required = true
 	return t
 }
 
+// Error allows you to pass a custom error as the error when the value is invalid,
+// you could also pass a `tavern.E` struct to customize more error messages for the value.
 func (t *Tavern) Error(err interface{}) *Tavern {
 	r := t.lastRule()
 	switch v := err.(type) {
@@ -175,6 +196,7 @@ func (t *Tavern) Error(err interface{}) *Tavern {
 	return t
 }
 
+// Check validates the values with the rules, it returns an error when a value is invalid.
 func (t *Tavern) Check() error {
 	for _, v := range t.rules {
 		err := v.check()
@@ -185,6 +207,9 @@ func (t *Tavern) Check() error {
 	return nil
 }
 
+// CheckAll validates the values with the rules,
+// it's slower than `Check` because this function collects the error of the validations.
+// It's useful when you want to return all the error messages instead of just one of them.
 func (t *Tavern) CheckAll() []error {
 	var errs []error
 	for _, v := range t.rules {
