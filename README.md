@@ -1,4 +1,4 @@
-# Tavern [![GoDoc](https://godoc.org/github.com/TeaMeow/Tavern?status.svg)](https://godoc.org/github.com/TeaMeow/Tavern)
+# Tavern [![GoDoc](https://godoc.org/github.com/teacat/tavern?status.svg)](https://godoc.org/github.com/teacat/tavern) [![Coverage Status](https://coveralls.io/repos/github/teacat/tavern/badge.svg?branch=master)](https://coveralls.io/github/teacat/tavern?branch=master) [![Build Status](https://travis-ci.org/teacat/tavern.svg?branch=master)](https://travis-ci.org/teacat/tavern) [![Go Report Card](https://goreportcard.com/badge/github.com/teacat/tavern)](https://goreportcard.com/report/github.com/teacat/tavern)
 
 不需建構體標籤（Struct Tag）就能夠以串連式函式進行規則檢查的簡易表單驗證套件。
 
