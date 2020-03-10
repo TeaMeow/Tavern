@@ -46,7 +46,7 @@
 打開終端機並且透過 `go get` 安裝此套件即可。
 
 ```bash
-$ go get github.com/TeaMeow/Tavern
+$ go get github.com/teacat/tavern
 ```
 
 # 使用方式
