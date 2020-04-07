@@ -291,7 +291,7 @@ func WithMinimum(min int) Validator {
 	}
 }
 
-//
+// WithDatetime 會檢查字串內容是否符合指定的日期格式。
 func WithDatetime(f string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -310,7 +310,7 @@ func WithDatetime(f string) Validator {
 	}
 }
 
-//
+// WithEmail 會檢查字串是否符合 Email 格式。
 func WithEmail() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -375,7 +375,7 @@ func WithFalse() {
 
 }
 
-//
+// WithRegExp 會驗證指定字串是否通過 RegExp 正規表達式。
 func WithRegExp(r string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -391,7 +391,7 @@ func WithRegExp(r string) Validator {
 	}
 }
 
-//
+// WithPrefix 會檢查字串是否開頭帶有指定字元。
 func WithPrefix(p string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -406,7 +406,7 @@ func WithPrefix(p string) Validator {
 	}
 }
 
-//
+// WithSuffix 會檢查字串結尾是否以特定字元結束。
 func WithSuffix(s string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -421,7 +421,7 @@ func WithSuffix(s string) Validator {
 	}
 }
 
-//
+// WithAlpha 會檢查字串是否為基本大小寫英文字母。
 func WithAlpha() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -436,7 +436,7 @@ func WithAlpha() Validator {
 	}
 }
 
-//
+// WithAlphanumeric 會檢查字串是否為大小寫英文字母與數字。
 func WithAlphanumeric() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -451,7 +451,7 @@ func WithAlphanumeric() Validator {
 	}
 }
 
-//
+// WithAlphaUnicode 會檢查字串是否為標準的 Unicode 語系文字。
 func WithAlphaUnicode() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -466,7 +466,7 @@ func WithAlphaUnicode() Validator {
 	}
 }
 
-//
+// WithAlphanumericUnicode 會檢查字串是否為標準的 Unicode 語系文字與數字。
 func WithAlphanumericUnicode() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -481,7 +481,7 @@ func WithAlphanumericUnicode() Validator {
 	}
 }
 
-//
+// WithNumeric 會檢查字串是否為數字或帶有小數點的格式。
 func WithNumeric() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -496,27 +496,27 @@ func WithNumeric() Validator {
 	}
 }
 
-//
+// WithHexadecimal 會檢查字串是否為十六進制格式。
 func WithHexadecimal() {
 
 }
 
-//
+// WithHexColor 會檢查字串是否為 # 井字開頭與結尾 3 或 6 個長度的十六進制格式。
 func WithHexColor() {
 
 }
 
-//
+// WithLowercase 會檢查字串是否僅有小寫英文字母。
 func WithLowercase() {
 
 }
 
-//
+// WithUppercase 會檢查字串是否僅有大寫英文字母。
 func WithUppercase() {
 
 }
 
-//
+// WithRGB 會檢查字串是否為 `rgb(0,0,0)` 格式。
 func WithRGB() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -531,7 +531,7 @@ func WithRGB() Validator {
 	}
 }
 
-//
+// WithRGBA 會檢查字串是否為 `rgba(0,0,0,0)` 格式。
 func WithRGBA() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -546,7 +546,7 @@ func WithRGBA() Validator {
 	}
 }
 
-//
+// WithHSL 會檢查字串是否為 `hsl(0,0,0)` 格式。
 func WithHSL() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -561,7 +561,7 @@ func WithHSL() Validator {
 	}
 }
 
-//
+// WithHSLA 會檢查字串是否為 `hsla(0,0,0,0)` 格式。
 func WithHSLA() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -576,7 +576,7 @@ func WithHSLA() Validator {
 	}
 }
 
-//
+// WithJSON 會驗證指定字串是否為正規的 JSON 格式。
 func WithJSON() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -610,7 +610,7 @@ func WithURNRFC2141() {
 
 }
 
-//
+// WithBase64 會檢查字串是否為 Base64 格式。
 func WithBase64() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -625,7 +625,7 @@ func WithBase64() Validator {
 	}
 }
 
-//
+// WithBase64URL 會檢查字串是否為帶有 Base64 資料的網址格式。
 func WithBase64URL() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -640,7 +640,7 @@ func WithBase64URL() Validator {
 	}
 }
 
-//
+// WithBitcoinAddress 會檢查字串是否為比特幣地址。
 func WithBitcoinAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -680,7 +680,7 @@ func WithISBN() {
 
 }
 
-//
+// WithISBN10 會檢查字串是否為 ISBN10 格式。
 func WithISBN10() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -695,7 +695,7 @@ func WithISBN10() Validator {
 	}
 }
 
-//
+// WithISBN13 會檢查字串是否為 ISBN13 格式。
 func WithISBN13() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -710,7 +710,7 @@ func WithISBN13() Validator {
 	}
 }
 
-//
+// WithUUID 會檢查字串是否為 UUID 格式。
 func WithUUID() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -725,7 +725,7 @@ func WithUUID() Validator {
 	}
 }
 
-//
+// WithUUID3 會檢查字串是否為 UUID3 格式。
 func WithUUID3() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -750,7 +750,7 @@ func WithUUID3() Validator {
 	}
 }
 
-//
+// WithUUID4 會檢查字串是否為 UUID4 格式。
 func WithUUID4() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -765,7 +765,7 @@ func WithUUID4() Validator {
 	}
 }
 
-//
+// WithUUID5 會檢查字串是否為 UUID5 格式。
 func WithUUID5() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -780,7 +780,7 @@ func WithUUID5() Validator {
 	}
 }
 
-//
+// WithASCII 會檢查字串是否為 ASCII 字元。
 func WithASCII() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -795,7 +795,7 @@ func WithASCII() Validator {
 	}
 }
 
-//
+// WithASCIIPrintable 會檢查字串是否為 ASCII 可列印字元。
 func WithASCIIPrintable() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -810,7 +810,7 @@ func WithASCIIPrintable() Validator {
 	}
 }
 
-//
+// WithMultiByte 會檢查字串是否為雙重位元組字元（如：符號、中日文）。
 func WithMultiByte() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -825,7 +825,7 @@ func WithMultiByte() Validator {
 	}
 }
 
-//
+// WithDataURI 會檢查字串是否為 DataURI 格式。
 func WithDataURI() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -840,7 +840,7 @@ func WithDataURI() Validator {
 	}
 }
 
-//
+// WithLatitude 會檢查傳入的字串格式是否為座標緯度。
 func WithLatitude() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -855,7 +855,7 @@ func WithLatitude() Validator {
 	}
 }
 
-//
+// WithLongitude 會檢查傳入的字串格式是否為座標經度。
 func WithLongitude() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -870,7 +870,7 @@ func WithLongitude() Validator {
 	}
 }
 
-//
+// WithTCPAddress 會驗證 TCP 地址是否可供解析。
 func WithTCPAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -886,7 +886,7 @@ func WithTCPAddress() Validator {
 	}
 }
 
-//
+// WithTCPv4Address 會驗證 TCPv4 地址是否可供解析。
 func WithTCPv4Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -902,7 +902,7 @@ func WithTCPv4Address() Validator {
 	}
 }
 
-//
+// WithTCPv6Address 會驗證 TCPv6 地址是否可供解析。
 func WithTCPv6Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -918,7 +918,7 @@ func WithTCPv6Address() Validator {
 	}
 }
 
-//
+// WithUDPAddress 會驗證 UDP 地址是否可供解析。
 func WithUDPAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -934,7 +934,7 @@ func WithUDPAddress() Validator {
 	}
 }
 
-//
+// WithUDPv4Address 會驗證 UDPv4 地址是否可供解析。
 func WithUDPv4Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -950,7 +950,7 @@ func WithUDPv4Address() Validator {
 	}
 }
 
-//
+// WithUDPv6Address 會驗證 UDPv6 地址是否可供解析。
 func WithUDPv6Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -966,7 +966,7 @@ func WithUDPv6Address() Validator {
 	}
 }
 
-//
+// WithIPAddress 會驗證一個 IP 地址是否可供解析。
 func WithIPAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -982,7 +982,7 @@ func WithIPAddress() Validator {
 	}
 }
 
-//
+// WithIPv4Address 會驗證一個 IPv4 地址是否可供解析。
 func WithIPv4Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -998,7 +998,7 @@ func WithIPv4Address() Validator {
 	}
 }
 
-//
+// WithIPv6Address 會驗證一個 IPv6 地址是否可供解析。
 func WithIPv6Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -1014,7 +1014,7 @@ func WithIPv6Address() Validator {
 	}
 }
 
-//
+// WithUnixAddress 會驗證一個 Unix 地址是否可供解析。
 func WithUnixAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -1030,12 +1030,12 @@ func WithUnixAddress() Validator {
 	}
 }
 
-//
+// WithMAC 會驗證一個字串是否為正規的 MAC 地址。
 func WithMAC() {
 
 }
 
-//
+// WithHTML 會驗證字串是否為正規的 HTML 格式。
 func WithHTML() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
@@ -1050,7 +1050,7 @@ func WithHTML() Validator {
 	}
 }
 
-//
+// WithHostname 會驗證指定的主機名稱是否可供解析。
 func WithHostname() {
 
 }
