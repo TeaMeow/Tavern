@@ -14,31 +14,32 @@ import (
 )
 
 var (
-	// ErrRequired
+	// ErrRequired 表示缺少了必填欄位。
 	ErrRequired = errors.New("tavern: missing required value")
-	// ErrLength
-	ErrLength = errors.New("tavern: out of the length")
-	//
-	ErrRange = errors.New("")
-	//
-	ErrDatetime = errors.New("")
-	//
-	ErrEmail = errors.New("")
+	// ErrLength 表示大小超出指定長度。
+	ErrLength = errors.New("tavern: out of length")
+	// ErrRange 表示大小超出指定範圍。
+	ErrRange = errors.New("tavern: out of range")
+	// ErrDatetime 表示不符合指定格式的日期字串。
+	ErrDatetime = errors.New("tavern: invalid datetime format")
+	// ErrEmail 表示錯誤的電子郵件地址格式。
+	ErrEmail = errors.New("tavern: invalid email format")
 
-	//
-	ErrIP = errors.New("")
-	//
-	ErrURL = errors.New("")
-	//
-	ErrJSON = errors.New("")
+	// ErrAddress 表示無法解析的位置。
+	ErrAddress = errors.New("tavern: unresolvable address")
+	// ErrURL 表示錯誤的 URL 格式。
+	ErrURL = errors.New("tavern: invalid url format")
+	// ErrJSON 表示錯誤的 JSON 格式。
+	ErrJSON = errors.New("tavern: invalid json format")
 )
 
 var (
-	// ErrWrongType
+	// ErrWrongType 表示建立驗證規則時，傳入錯誤的格式到驗證器。
 	ErrWrongType = errors.New("tavern: passed wrong type to validator")
 )
 
 const (
+	// KeyRequired 是必填的鍵值上下文資料。
 	KeyRequired = "KEY_REQUIRED"
 )
 
