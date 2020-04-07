@@ -292,26 +292,6 @@ func WithMinimum(min int) Validator {
 }
 
 //
-func WithGreater() {
-
-}
-
-//
-func WithLess() {
-
-}
-
-//
-func WithGreaterOrEqual() {
-
-}
-
-//
-func WithLessOrEqual() {
-
-}
-
-//
 func WithDatetime(f string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
