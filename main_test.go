@@ -182,9 +182,13 @@ func TestEmail(t *testing.T) {
 	a.Error(err)
 	err = New().Add("yamiodymel@xx@xx.com", WithEmail()).Validate()
 	a.Error(err)
-
-	err = New().Add("yamiodymel@xx.coom", WithEmail()).Validate()
-	a.NoError(err)
 	err = New().Add("yamiodymel@x", WithEmail()).Validate()
+	a.Error(err)
+	err = New().Add("yamiodymel@x.", WithEmail()).Validate()
+	a.Error(err)
+
+	err = New().Add("yamiodymel@xx.com", WithEmail()).Validate()
 	a.NoError(err)
 }
+
+func T
