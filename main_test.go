@@ -12,9 +12,9 @@ func TestRequired(t *testing.T) {
 	a.Error(err)
 	err = New().Add(0, WithRequired()).Validate()
 	a.Error(err)
-	err = New().Add([]string{}, WithRequired()).Validate()
-	a.Error(err)
 
+	err = New().Add([]string{}, WithRequired()).Validate()
+	a.NoError(err)
 	err = New().Add("ABC", WithRequired()).Validate()
 	a.NoError(err)
 	err = New().Add(123, WithRequired()).Validate()
@@ -25,13 +25,15 @@ func TestRequired(t *testing.T) {
 
 func TestLength(t *testing.T) {
 	a := assert.New(t)
-	err := New().Add("", WithLength(1, 10)).Validate()
+	err := New().Add("", WithRequired(), WithLength(1, 10)).Validate()
 	a.Error(err)
 	err = New().Add(10, WithLength(3, 10)).Validate()
 	a.Error(err)
 	err = New().Add([]string{}, WithLength(1, 10)).Validate()
 	a.Error(err)
 
+	err = New().Add("", WithLength(1, 10)).Validate()
+	a.NoError(err)
 	err = New().Add("A", WithLength(1, 10)).Validate()
 	a.NoError(err)
 	err = New().Add(1000, WithLength(1, 10)).Validate()
@@ -66,6 +68,8 @@ func TestMinLength(t *testing.T) {
 	err = New().Add([]string{"A", "B", "C"}, WithMinLength(5)).Validate()
 	a.Error(err)
 
+	err = New().Add("", WithMinLength(5)).Validate()
+	a.NoError(err)
 	err = New().Add("ABC", WithMinLength(3)).Validate()
 	a.NoError(err)
 	err = New().Add(1000, WithMinLength(3)).Validate()
@@ -83,6 +87,8 @@ func TestFixedLength(t *testing.T) {
 	err = New().Add([]string{"A", "B", "C"}, WithFixedLength(5)).Validate()
 	a.Error(err)
 
+	err = New().Add("", WithFixedLength(3)).Validate()
+	a.NoError(err)
 	err = New().Add("ABC", WithFixedLength(3)).Validate()
 	a.NoError(err)
 	err = New().Add(100, WithFixedLength(3)).Validate()
@@ -99,7 +105,11 @@ func TestRange(t *testing.T) {
 	a.Error(err)
 	err = New().Add(-0.3, WithRange(0, 5)).Validate()
 	a.Error(err)
+	err = New().Add(0, WithRequired(), WithRange(1, 5)).Validate()
+	a.Error(err)
 
+	err = New().Add(0, WithRange(1, 5)).Validate()
+	a.NoError(err)
 	err = New().Add(3, WithRange(0, 5)).Validate()
 	a.NoError(err)
 	err = New().Add(0, WithRange(0, 5)).Validate()
@@ -129,7 +139,11 @@ func TestMinRange(t *testing.T) {
 	a.Error(err)
 	err = New().Add(4.3, WithMinRange(5)).Validate()
 	a.Error(err)
+	err = New().Add(0, WithRequired(), WithMinRange(5)).Validate()
+	a.Error(err)
 
+	err = New().Add(0, WithMinRange(5)).Validate()
+	a.NoError(err)
 	err = New().Add(6, WithMinRange(5)).Validate()
 	a.NoError(err)
 	err = New().Add(5, WithMinRange(5)).Validate()
@@ -190,5 +204,3 @@ func TestEmail(t *testing.T) {
 	err = New().Add("yamiodymel@xx.com", WithEmail()).Validate()
 	a.NoError(err)
 }
-
-func T

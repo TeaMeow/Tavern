@@ -19,7 +19,7 @@ type value struct {
 }
 
 // Validator 是一個能夠驗證內容的驗證器，並且會將上下文結構體往下一個驗證器傳遞。
-type Validator func(value interface{}, ctx context.Context) (error, context.Context)
+type Validator func(ctx context.Context, value interface{}) (context.Context, error)
 
 // Add 會增加一個欲檢查的值，與其檢查的驗證器。
 func (t *Tavern) Add(v interface{}, validators ...Validator) *Tavern {
@@ -35,7 +35,7 @@ func (t *Tavern) Validate() (err error) {
 	for _, v := range t.values {
 		ctx := context.Background()
 		for _, j := range v.validators {
-			err, ctx = j(v.value, ctx)
+			ctx, err = j(ctx, v.value)
 			if err != nil {
 				return err
 			}
