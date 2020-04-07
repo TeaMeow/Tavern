@@ -29,6 +29,8 @@ var (
 	ErrIP = errors.New("")
 	//
 	ErrURL = errors.New("")
+	//
+	ErrJSON = errors.New("")
 )
 
 var (
@@ -203,7 +205,7 @@ func WithMaxRange(max int) Validator {
 	}
 }
 
-// WithMaxRange 會檢查正整數的數值是否大於某個範圍內。
+// WithMinRange 會檢查正整數的數值是否小於某個範圍內。
 func WithMinRange(min int) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		// IS NOT REQUIRD
@@ -229,7 +231,7 @@ func WithMinRange(min int) Validator {
 	}
 }
 
-//
+// WithMaximum 會要求切片、字串、正整數必須小於指定長度或範圍內。
 func WithMaximum(max int) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		// IS NOT REQUIRD
@@ -259,7 +261,7 @@ func WithMaximum(max int) Validator {
 	}
 }
 
-//
+// WithMinimum 會要求切片、字串、正整數必須符小於指定長度或範圍內。
 func WithMinimum(min int) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		// IS NOT REQUIRD
@@ -312,15 +314,13 @@ func WithLessOrEqual() {
 //
 func WithDatetime(f string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			str := value.String()
-			t, err := time.Parse(f, str)
+		switch k := v.(type) {
+		case string:
+			t, err := time.Parse(f, k)
 			if err != nil {
 				return err, ctx
 			}
-			if t.Format(f) != str {
+			if t.Format(f) != k {
 				return ErrDatetime, ctx
 			}
 		default:
@@ -333,10 +333,9 @@ func WithDatetime(f string) Validator {
 //
 func WithEmail() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpEmailRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpEmailRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -399,10 +398,9 @@ func WithFalse() {
 //
 func WithRegExp(r string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			m, err := regexp.Match(r, []byte(value.String()))
+		switch k := v.(type) {
+		case string:
+			m, err := regexp.Match(r, []byte(k))
 			if !m || err != nil {
 				return ErrEmail, ctx
 			}
@@ -416,10 +414,9 @@ func WithRegExp(r string) Validator {
 //
 func WithPrefix(p string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !strings.HasPrefix(value.String(), p) {
+		switch k := v.(type) {
+		case string:
+			if !strings.HasPrefix(k, p) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -432,10 +429,9 @@ func WithPrefix(p string) Validator {
 //
 func WithSuffix(s string) Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !strings.HasSuffix(value.String(), s) {
+		switch k := v.(type) {
+		case string:
+			if !strings.HasSuffix(k, s) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -448,10 +444,9 @@ func WithSuffix(s string) Validator {
 //
 func WithAlpha() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpAlphaRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpAlphaRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -464,10 +459,9 @@ func WithAlpha() Validator {
 //
 func WithAlphanumeric() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpAlphaNumericRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpAlphaNumericRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -480,10 +474,9 @@ func WithAlphanumeric() Validator {
 //
 func WithAlphaUnicode() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpAlphaUnicodeRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpAlphaUnicodeRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -496,10 +489,9 @@ func WithAlphaUnicode() Validator {
 //
 func WithAlphanumericUnicode() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpAlphaUnicodeNumericRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpAlphaUnicodeNumericRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -512,10 +504,9 @@ func WithAlphanumericUnicode() Validator {
 //
 func WithNumeric() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpNumericRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpNumericRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -548,10 +539,9 @@ func WithUppercase() {
 //
 func WithRGB() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpRgbRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpRgbRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -564,10 +554,9 @@ func WithRGB() Validator {
 //
 func WithRGBA() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpRgbaRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpRgbaRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -580,10 +569,9 @@ func WithRGBA() Validator {
 //
 func WithHSL() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpHslRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpHslRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -596,10 +584,9 @@ func WithHSL() Validator {
 //
 func WithHSLA() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpHslaRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpHslaRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -610,7 +597,7 @@ func WithHSLA() Validator {
 }
 
 //
-func WithJSON() {
+func WithJSON() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
 		switch k := v.(type) {
 		case string:
@@ -624,7 +611,6 @@ func WithJSON() {
 		default:
 			panic(ErrWrongType)
 		}
-
 		return nil, ctx
 	}
 }
@@ -647,10 +633,9 @@ func WithURNRFC2141() {
 //
 func WithBase64() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpBase64Regex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpBase64Regex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -663,10 +648,9 @@ func WithBase64() Validator {
 //
 func WithBase64URL() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpBase64URLRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpBase64URLRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -679,10 +663,9 @@ func WithBase64URL() Validator {
 //
 func WithBitcoinAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpBtcAddressRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpBtcAddressRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -720,10 +703,9 @@ func WithISBN() {
 //
 func WithISBN10() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpISBN10Regex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpISBN10Regex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -736,10 +718,9 @@ func WithISBN10() Validator {
 //
 func WithISBN13() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpISBN13Regex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpISBN13Regex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -752,10 +733,9 @@ func WithISBN13() Validator {
 //
 func WithUUID() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpUUIDRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpUUIDRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -768,6 +748,15 @@ func WithUUID() Validator {
 //
 func WithUUID3() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
+		switch k := v.(type) {
+		case string:
+			if !regExpUUID3Regex.Match([]byte(k)) {
+				return ErrEmail, ctx
+			}
+		default:
+			panic(ErrWrongType)
+		}
+
 		value := reflect.ValueOf(v)
 		switch value.Kind() {
 		case reflect.String:
@@ -784,10 +773,9 @@ func WithUUID3() Validator {
 //
 func WithUUID4() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpUUID4Regex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpUUID4Regex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -800,10 +788,9 @@ func WithUUID4() Validator {
 //
 func WithUUID5() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpUUID5Regex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpUUID5Regex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -816,10 +803,9 @@ func WithUUID5() Validator {
 //
 func WithASCII() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpASCIIRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpASCIIRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -832,10 +818,9 @@ func WithASCII() Validator {
 //
 func WithASCIIPrintable() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpASCIIPrintableRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpASCIIPrintableRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -848,10 +833,9 @@ func WithASCIIPrintable() Validator {
 //
 func WithMultiByte() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpMultibyteRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpMultibyteRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -864,10 +848,9 @@ func WithMultiByte() Validator {
 //
 func WithDataURI() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpDataURIRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpDataURIRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -880,10 +863,9 @@ func WithDataURI() Validator {
 //
 func WithLatitude() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpLatitudeRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpLatitudeRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -896,10 +878,9 @@ func WithLatitude() Validator {
 //
 func WithLongitude() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpLongitudeRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpLongitudeRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
@@ -912,10 +893,9 @@ func WithLongitude() Validator {
 //
 func WithTCPAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveTCPAddr("tcp", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveTCPAddr("tcp", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -929,10 +909,9 @@ func WithTCPAddress() Validator {
 //
 func WithTCPv4Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveTCPAddr("tcp4", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveTCPAddr("tcp4", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -946,10 +925,9 @@ func WithTCPv4Address() Validator {
 //
 func WithTCPv6Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveTCPAddr("tcp6", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveTCPAddr("tcp6", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -963,10 +941,9 @@ func WithTCPv6Address() Validator {
 //
 func WithUDPAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveTCPAddr("udp", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveTCPAddr("udp", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -980,10 +957,9 @@ func WithUDPAddress() Validator {
 //
 func WithUDPv4Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveTCPAddr("udp4", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveTCPAddr("udp4", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -997,10 +973,9 @@ func WithUDPv4Address() Validator {
 //
 func WithUDPv6Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveTCPAddr("udp6", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveTCPAddr("udp6", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -1012,12 +987,11 @@ func WithUDPv6Address() Validator {
 }
 
 //
-func WithIPAddress() {
+func WithIPAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveIPAddr("ip", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveIPAddr("ip", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -1029,12 +1003,11 @@ func WithIPAddress() {
 }
 
 //
-func WithIPv4Address() {
+func WithIPv4Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveIPAddr("ip4", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveIPAddr("ip4", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -1046,12 +1019,11 @@ func WithIPv4Address() {
 }
 
 //
-func WithIPv6Address() {
+func WithIPv6Address() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveIPAddr("ip6", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveIPAddr("ip6", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -1063,12 +1035,11 @@ func WithIPv6Address() {
 }
 
 //
-func WithUnixAddress() {
+func WithUnixAddress() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			_, err := net.ResolveUnixAddr("unix", value.String())
+		switch k := v.(type) {
+		case string:
+			_, err := net.ResolveUnixAddr("unix", k)
 			if err != nil {
 				return ErrEmail, ctx
 			}
@@ -1087,10 +1058,9 @@ func WithMAC() {
 //
 func WithHTML() Validator {
 	return func(v interface{}, ctx context.Context) (error, context.Context) {
-		value := reflect.ValueOf(v)
-		switch value.Kind() {
-		case reflect.String:
-			if !regExpHTMLRegex.Match([]byte(value.String())) {
+		switch k := v.(type) {
+		case string:
+			if !regExpHTMLRegex.Match([]byte(k)) {
 				return ErrEmail, ctx
 			}
 		default:
