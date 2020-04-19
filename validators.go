@@ -48,6 +48,16 @@ const (
 	KeyRequired Key = iota
 )
 
+// Error 是一個 Tavern 的驗證錯誤資料。
+type Error struct {
+	// Name 是欄位的名稱。
+	Name string
+	// Value 是欄位值。
+	Value interface{}
+	// Err 是錯誤訊息。
+	Err error
+}
+
 // isNotRequiredAndZeroValue 表示這個欄位是不是非必要而且還零值。
 func isNotRequiredAndZeroValue(ctx context.Context, v interface{}) bool {
 	_, ok := ctx.Value(KeyRequired).(bool)
