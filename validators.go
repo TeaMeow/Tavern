@@ -46,17 +46,9 @@ type Key int
 const (
 	// KeyRequired 是必填的鍵值上下文資料。
 	KeyRequired Key = iota
+	// KeyCustomError 是一個自訂的錯誤。
+	KeyCustomError
 )
-
-// Error 是一個 Tavern 的驗證錯誤資料。
-type Error struct {
-	// Name 是欄位的名稱。
-	Name string
-	// Value 是欄位值。
-	Value interface{}
-	// Err 是錯誤訊息。
-	Err error
-}
 
 // isNotRequiredAndZeroValue 表示這個欄位是不是非必要而且還零值。
 func isNotRequiredAndZeroValue(ctx context.Context, v interface{}) bool {
