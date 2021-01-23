@@ -14,40 +14,37 @@ import (
 )
 
 var (
-	// ErrRequired 表示缺少了必填欄位。
+	// ErrRequired is missing the required value.
 	ErrRequired = errors.New("tavern: missing required value")
-	// ErrLength 表示大小超出指定長度。
+	// ErrLength is out of the length.
 	ErrLength = errors.New("tavern: out of length")
-	// ErrRange 表示大小超出指定範圍。
+	// ErrRange is out of the range.
 	ErrRange = errors.New("tavern: out of range")
-	// ErrDatetime 表示不符合指定格式的日期字串。
+	// ErrDatetime is invalid datetime format.
 	ErrDatetime = errors.New("tavern: invalid datetime format")
-	// ErrEmail 表示錯誤的電子郵件地址格式。
+	// ErrEmail is invalid email format.
 	ErrEmail = errors.New("tavern: invalid email format")
-	//
-	ErrRegExp = errors.New("")
-
-	// ErrAddress 表示無法解析的位置。
+	// ErrRegExp is invalid pattern.
+	ErrRegExp = errors.New("invalid pattern")
+	// ErrAddress is unresolvable address.
 	ErrAddress = errors.New("tavern: unresolvable address")
-	// ErrURL 表示錯誤的 URL 格式。
+	// ErrURL is invalid url format.
 	ErrURL = errors.New("tavern: invalid url format")
-	// ErrJSON 表示錯誤的 JSON 格式。
+	// ErrJSON is invalid json format.
 	ErrJSON = errors.New("tavern: invalid json format")
 )
 
 var (
-	// ErrWrongType 表示建立驗證規則時，傳入錯誤的格式到驗證器。
-	ErrWrongType = errors.New("tavern: passed wrong type to validator")
+	// ErrWrongType is passed a wrong value type to validator.
+	ErrWrongType = errors.New("tavern: passed wrong value type to validator")
 )
 
-// Key
+// Key represents the keys in the context.
 type Key int
 
 const (
-	// KeyRequired 是必填的鍵值上下文資料。
+	// KeyRequired returns true if the value was set to required. The validators can rely on the value with it's own logic.
 	KeyRequired Key = iota
-	// KeyCustomError 是一個自訂的錯誤。
-	KeyCustomError
 )
 
 // isNotRequiredAndZeroValue 表示這個欄位是不是非必要而且還零值。
@@ -56,7 +53,7 @@ func isNotRequiredAndZeroValue(ctx context.Context, v interface{}) bool {
 	return !ok && reflect.ValueOf(v).IsZero()
 }
 
-// WithRequired 表示該內容值必須有內容而非零值（如：0、""）。
+// WithRequired requires the value to not be a zero value (e.g. 0, "") nor an empty value.
 func WithRequired() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		ctx = context.WithValue(ctx, KeyRequired, true)
@@ -68,7 +65,7 @@ func WithRequired() Validator {
 	}
 }
 
-// WithLength 會檢查切片、字串或正整數的長度。
+// WithLength requires the length of the value (e.g. slive, string, number) to be in a certian length. It counts the length of the number if the value was a number.
 func WithLength(min, max int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -88,7 +85,7 @@ func WithLength(min, max int) Validator {
 	}
 }
 
-// WithMaxLength 會檢查切片、字串、正整數的最大長度。
+// WithMaxLength requires the length of the value (e.g. slive, string, number) cannot be too long. It counts the length of the number if the value was a number.
 func WithMaxLength(max int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -123,7 +120,7 @@ func WithMaxLength(max int) Validator {
 	}
 }
 
-// WithMinLength 會檢查切片、字串、正整數的最小長度。
+// WithMinLength requires the length of the value (e.g. slive, string, number) cannot be too short. It counts the length of the number if the value was a number.
 func WithMinLength(min int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -158,7 +155,7 @@ func WithMinLength(min int) Validator {
 	}
 }
 
-// WithFixedLength 會要求切片、字串、正整數必須符合指定長度。
+// WithFixedLength requires the length of the value (e.g. slive, string, number) to be the exact length. It counts the length of the number if the value was a number.
 func WithFixedLength(length int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -178,7 +175,7 @@ func WithFixedLength(length int) Validator {
 	}
 }
 
-// WithRange 會檢查正整數的數值是否在指定範圍內。
+// WithRange requires the number of the value to be in a certian range.
 func WithRange(min, max int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -206,7 +203,7 @@ func WithRange(min, max int) Validator {
 	}
 }
 
-// WithMaxRange 會檢查正整數的數值是否小於某個範圍內。
+// WithMaxRange requires the number of the value to be equal or less than the specified number.
 func WithMaxRange(max int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -234,7 +231,7 @@ func WithMaxRange(max int) Validator {
 	}
 }
 
-// WithMinRange 會檢查正整數的數值是否小於某個範圍內。
+// WithMinRange requires the number of the value to be least equal or greater than the specified number.
 func WithMinRange(min int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -262,7 +259,7 @@ func WithMinRange(min int) Validator {
 	}
 }
 
-// WithMaximum 會要求切片、字串、正整數必須小於指定長度或範圍內。
+// WithMaximum requires the length of the slice, string and the range of the number to be least equal or less than the specified number.
 func WithMaximum(max int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -294,7 +291,7 @@ func WithMaximum(max int) Validator {
 	}
 }
 
-// WithMinimum 會要求切片、字串、正整數必須符小於指定長度或範圍內。
+// WithMinimum requires the length of the slice, string and the range of the number to be least equal or greater than the specified number.
 func WithMinimum(min int) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -326,7 +323,7 @@ func WithMinimum(min int) Validator {
 	}
 }
 
-// WithDatetime 會檢查字串內容是否符合指定的日期格式。
+// WithDatetime requires the date format to match the Golang date format. It validates via the `time.Parse` function.
 func WithDatetime(f string) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -349,7 +346,7 @@ func WithDatetime(f string) Validator {
 	}
 }
 
-// WithEmail 會檢查字串是否符合 Email 格式。
+// WithEmail requires the value to be an email. It validates with a built-in email regexp pattern.
 func WithEmail() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -418,7 +415,7 @@ func WithFalse() {
 
 }
 
-// WithRegExp 會驗證指定字串是否通過 RegExp 正規表達式。
+// WithRegExp validates the valiue with specified regular expression.
 func WithRegExp(r string) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -438,7 +435,7 @@ func WithRegExp(r string) Validator {
 	}
 }
 
-// WithPrefix 會檢查字串是否開頭帶有指定字元。
+// WithPrefix requires the value started with a specified sentence.
 func WithPrefix(p string) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -457,7 +454,7 @@ func WithPrefix(p string) Validator {
 	}
 }
 
-// WithSuffix 會檢查字串結尾是否以特定字元結束。
+// WithSuffix requires the value ended with a specified sentence.
 func WithSuffix(s string) Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -476,7 +473,7 @@ func WithSuffix(s string) Validator {
 	}
 }
 
-// WithAlpha 會檢查字串是否為基本大小寫英文字母。
+// WithAlpha requires the value to be alphabets only.
 func WithAlpha() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -495,7 +492,7 @@ func WithAlpha() Validator {
 	}
 }
 
-// WithAlphanumeric 會檢查字串是否為大小寫英文字母與數字。
+// WithAlphanumeric requires the value to be alphanumerics only.
 func WithAlphanumeric() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -514,7 +511,7 @@ func WithAlphanumeric() Validator {
 	}
 }
 
-// WithAlphaUnicode 會檢查字串是否為標準的 Unicode 語系文字。
+// WithAlphaUnicode requires the value to be standard unicode characters.
 func WithAlphaUnicode() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -533,7 +530,7 @@ func WithAlphaUnicode() Validator {
 	}
 }
 
-// WithAlphanumericUnicode 會檢查字串是否為標準的 Unicode 語系文字與數字。
+// WithAlphanumericUnicode requires the value to be numerics or standard unicode characters.
 func WithAlphanumericUnicode() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -552,7 +549,7 @@ func WithAlphanumericUnicode() Validator {
 	}
 }
 
-// WithNumeric 會檢查字串是否為數字或帶有小數點的格式。
+// WithNumeric requires the value to be numerics (includes the floating point).
 func WithNumeric() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -591,7 +588,7 @@ func WithUppercase() {
 
 }
 
-// WithRGB 會檢查字串是否為 `rgb(0,0,0)` 格式。
+// WithRGB requires the value to be a string RGB with `rgb(0,0,0)` format.
 func WithRGB() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -610,7 +607,7 @@ func WithRGB() Validator {
 	}
 }
 
-// WithRGBA 會檢查字串是否為 `rgba(0,0,0,0)` 格式。
+// WithRGBA requires the value to be a string RGBA with `rgba(0,0,0,0)` format.
 func WithRGBA() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -629,7 +626,7 @@ func WithRGBA() Validator {
 	}
 }
 
-// WithHSL 會檢查字串是否為 `hsl(0,0,0)` 格式。
+// WithHSL requires the value to be a string HSL with `hsl(0,0,0)` format.
 func WithHSL() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -648,7 +645,7 @@ func WithHSL() Validator {
 	}
 }
 
-// WithHSLA 會檢查字串是否為 `hsla(0,0,0,0)` 格式。
+// WithHSLA requires the value to be a string HSLA with `hsla(0,0,0,0)` format.
 func WithHSLA() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -667,7 +664,7 @@ func WithHSLA() Validator {
 	}
 }
 
-// WithJSON 會驗證指定字串是否為正規的 JSON 格式。
+// WithJSON requires the value to be a valid JSON. It validates via the `json.Valid` function.
 func WithJSON() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -705,7 +702,7 @@ func WithURNRFC2141() {
 
 }
 
-// WithBase64 會檢查字串是否為 Base64 格式。
+// WithBase64 requires the value to be a base64 string.
 func WithBase64() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -724,7 +721,7 @@ func WithBase64() Validator {
 	}
 }
 
-// WithBase64URL 會檢查字串是否為帶有 Base64 資料的網址格式。
+// WithBase64URL requires the value to be a URL base64.
 func WithBase64URL() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -743,7 +740,7 @@ func WithBase64URL() Validator {
 	}
 }
 
-// WithBitcoinAddress 會檢查字串是否為比特幣地址。
+// WithBitcoinAddress requires the value to be a Bitcoin address.
 func WithBitcoinAddress() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -787,7 +784,7 @@ func WithISBN() {
 
 }
 
-// WithISBN10 會檢查字串是否為 ISBN10 格式。
+// WithISBN10 requires the value to be a valid ISBN10 string.
 func WithISBN10() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -806,7 +803,7 @@ func WithISBN10() Validator {
 	}
 }
 
-// WithISBN13 會檢查字串是否為 ISBN13 格式。
+// WithISBN13 requires the value to be a valid ISBN13 string.
 func WithISBN13() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -825,7 +822,7 @@ func WithISBN13() Validator {
 	}
 }
 
-// WithUUID 會檢查字串是否為 UUID 格式。
+// WithUUID requires the value to be a valid UUID string.
 func WithUUID() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -844,7 +841,7 @@ func WithUUID() Validator {
 	}
 }
 
-// WithUUID3 會檢查字串是否為 UUID3 格式。
+// WithUUID3 requires the value to be a valid UUID3 string.
 func WithUUID3() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -873,7 +870,7 @@ func WithUUID3() Validator {
 	}
 }
 
-// WithUUID4 會檢查字串是否為 UUID4 格式。
+// WithUUID4 requires the value to be a valid UUID4 string.
 func WithUUID4() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -892,7 +889,7 @@ func WithUUID4() Validator {
 	}
 }
 
-// WithUUID5 會檢查字串是否為 UUID5 格式。
+// WithUUID5 requires the value to be a valid UUID5 string.
 func WithUUID5() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -911,7 +908,7 @@ func WithUUID5() Validator {
 	}
 }
 
-// WithASCII 會檢查字串是否為 ASCII 字元。
+// WithASCII requires the value to be a valid ASCII characters.
 func WithASCII() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -930,7 +927,7 @@ func WithASCII() Validator {
 	}
 }
 
-// WithASCIIPrintable 會檢查字串是否為 ASCII 可列印字元。
+// WithASCIIPrintable requires the value to be a valid printable ASCII characters.
 func WithASCIIPrintable() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -949,7 +946,7 @@ func WithASCIIPrintable() Validator {
 	}
 }
 
-// WithMultiByte 會檢查字串是否為雙重位元組字元（如：符號、中日文）。
+// WithMultiByte requires the value to be multi-byte (e.g. Japanese, Chinese, Symbols).
 func WithMultiByte() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -968,7 +965,7 @@ func WithMultiByte() Validator {
 	}
 }
 
-// WithDataURI 會檢查字串是否為 DataURI 格式。
+// WithDataURI requires the value to be a data URI string.
 func WithDataURI() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -987,7 +984,7 @@ func WithDataURI() Validator {
 	}
 }
 
-// WithLatitude 會檢查傳入的字串格式是否為座標緯度。
+// WithLatitude requires the value to be a valid latitude format.
 func WithLatitude() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1006,7 +1003,7 @@ func WithLatitude() Validator {
 	}
 }
 
-// WithLongitude 會檢查傳入的字串格式是否為座標經度。
+// WithLongitude requires the value to be a valid longitude format.
 func WithLongitude() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1025,7 +1022,7 @@ func WithLongitude() Validator {
 	}
 }
 
-// WithTCPAddress 會驗證 TCP 地址是否可供解析。
+// WithTCPAddress requires the value TCP address to be resolvable. It validates via the `net.ResolveTCPAddr` function.
 func WithTCPAddress() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1045,7 +1042,7 @@ func WithTCPAddress() Validator {
 	}
 }
 
-// WithTCPv4Address 會驗證 TCPv4 地址是否可供解析。
+// WithTCPv4Address requires the value TCPv4 address to be resolvable. It validates via the `net.ResolveTCPAddr` function.
 func WithTCPv4Address() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1065,7 +1062,7 @@ func WithTCPv4Address() Validator {
 	}
 }
 
-// WithTCPv6Address 會驗證 TCPv6 地址是否可供解析。
+// WithTCPv6Address requires the value TCPv6 address to be resolvable. It validates via the `net.ResolveTCPAddr` function.
 func WithTCPv6Address() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1085,7 +1082,7 @@ func WithTCPv6Address() Validator {
 	}
 }
 
-// WithUDPAddress 會驗證 UDP 地址是否可供解析。
+// WithUDPAddress requires the value UDP address to be resolvable. It validates via the `net.ResolveTCPAddr` function.
 func WithUDPAddress() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1105,7 +1102,7 @@ func WithUDPAddress() Validator {
 	}
 }
 
-// WithUDPv4Address 會驗證 UDPv4 地址是否可供解析。
+// WithUDPv4Address requires the value UDPv4 address to be resolvable. It validates via the `net.ResolveTCPAddr` function.
 func WithUDPv4Address() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1125,7 +1122,7 @@ func WithUDPv4Address() Validator {
 	}
 }
 
-// WithUDPv6Address 會驗證 UDPv6 地址是否可供解析。
+// WithUDPv6Address requires the value UDPv6 address to be resolvable. It validates via the `net.ResolveTCPAddr` function.
 func WithUDPv6Address() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1145,7 +1142,7 @@ func WithUDPv6Address() Validator {
 	}
 }
 
-// WithIPAddress 會驗證一個 IP 地址是否可供解析。
+// WithIPAddress requires the value IP address to be resolvable. It validates via the `net.ResolveIPAddr` function.
 func WithIPAddress() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1165,7 +1162,7 @@ func WithIPAddress() Validator {
 	}
 }
 
-// WithIPv4Address 會驗證一個 IPv4 地址是否可供解析。
+// WithIPv4Address requires the value IPv4 address to be resolvable. It validates via the `net.ResolveIPAddr` function.
 func WithIPv4Address() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1185,7 +1182,7 @@ func WithIPv4Address() Validator {
 	}
 }
 
-// WithIPv6Address 會驗證一個 IPv6 地址是否可供解析。
+// WithIPv6Address requires the value IPv6 address to be resolvable. It validates via the `net.ResolveIPAddr` function.
 func WithIPv6Address() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1205,7 +1202,7 @@ func WithIPv6Address() Validator {
 	}
 }
 
-// WithUnixAddress 會驗證一個 Unix 地址是否可供解析。
+// WithUnixAddress requires the value Unix address to be resolvable. It validates via the `net.ResolveUnixAddr` function.
 func WithUnixAddress() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1230,7 +1227,7 @@ func WithMAC() {
 
 }
 
-// WithHTML 會驗證字串是否為正規的 HTML 格式。
+// WithHTML requires the value to be a valid HTML.
 func WithHTML() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1252,4 +1249,15 @@ func WithHTML() Validator {
 // WithHostname 會驗證指定的主機名稱是否可供解析。
 func WithHostname() {
 
+}
+
+// WithCustomError accepts a validator with a custom error. It returns the custom error instead of the native Tavern error when the validator didn't pass it's validation. Useful if you are trying to create custom errors for each validation.
+func WithCustomError(validator Validator, err error) Validator {
+	return func(ctx context.Context, v interface{}) (context.Context, error) {
+		ctx, originalErr := validator(ctx, v)
+		if originalErr != nil {
+			return ctx, err
+		}
+		return ctx, nil
+	}
 }
