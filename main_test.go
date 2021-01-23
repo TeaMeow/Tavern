@@ -136,6 +136,7 @@ func TestMaxLength(t *testing.T) {
 			Validators: []Validator{WithMaxLength(3)},
 		},
 	})
+
 	a.NoError(err)
 	err = Validate([]Rule{
 		{
@@ -563,6 +564,614 @@ func TestEmail(t *testing.T) {
 		{
 			Value:      "yamiodymel@xx.com",
 			Validators: []Validator{WithEmail()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestUnixAddress(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "helloworld",
+			Validators: []Validator{WithUnixAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithUnixAddress()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestHTML(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "hello",
+			Validators: []Validator{WithHTML()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "<bhello",
+			Validators: []Validator{WithHTML()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "<b>hello</b>",
+			Validators: []Validator{WithHTML()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestIPAddress(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "localhost",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "::0",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1",
+			Validators: []Validator{WithIPAddress()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestIPv4Address(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithIPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+			Validators: []Validator{WithIPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithIPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123:1234",
+			Validators: []Validator{WithIPv4Address()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithIPv4Address()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1",
+			Validators: []Validator{WithIPv4Address()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestIPv6Address(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithIPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithIPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1",
+			Validators: []Validator{WithIPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithIPv6Address()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithIPv6Address()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+			Validators: []Validator{WithIPv6Address()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "::0",
+			Validators: []Validator{WithIPv6Address()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestUDPAddress(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "localhost",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "::0",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123:1234",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[::0]:1234",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithUDPAddress()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestUDPv4Address(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithUDPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithUDPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithUDPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithUDPv4Address()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1:1234",
+			Validators: []Validator{WithUDPv4Address()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestUDPv6Address(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithUDPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithUDPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1",
+			Validators: []Validator{WithUDPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithUDPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1:1234",
+			Validators: []Validator{WithUDPv6Address()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithUDPv6Address()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[::0]:1234",
+			Validators: []Validator{WithUDPv6Address()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestTCPAddress(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "localhost",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "::0",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123:1234",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[::0]:1234",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithTCPAddress()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestTCPv4Address(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithTCPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithTCPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithTCPv4Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithTCPv4Address()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1:1234",
+			Validators: []Validator{WithTCPv4Address()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestTCPv6Address(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "abcdefg",
+			Validators: []Validator{WithTCPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "192.168.1.123",
+			Validators: []Validator{WithTCPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1",
+			Validators: []Validator{WithTCPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "0",
+			Validators: []Validator{WithTCPv6Address()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "127.0.0.1:1234",
+			Validators: []Validator{WithTCPv6Address()},
+		},
+	})
+	a.Error(err)
+
+	err = Validate([]Rule{
+		{
+			Value:      "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:1234",
+			Validators: []Validator{WithTCPv6Address()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "[::0]:1234",
+			Validators: []Validator{WithTCPv6Address()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestLatitude(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "1234.92967312345678",
+			Validators: []Validator{WithLatitude()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "35.",
+			Validators: []Validator{WithLatitude()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "12345678",
+			Validators: []Validator{WithLatitude()},
+		},
+	})
+
+	err = Validate([]Rule{
+		{
+			Value:      "35.929673",
+			Validators: []Validator{WithLatitude()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "35",
+			Validators: []Validator{WithLatitude()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "-78.948237",
+			Validators: []Validator{WithLatitude()},
+		},
+	})
+	a.NoError(err)
+}
+
+func TestLongitude(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "1234.92967312345678",
+			Validators: []Validator{WithLongitude()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "35.",
+			Validators: []Validator{WithLongitude()},
+		},
+	})
+	a.Error(err)
+	err = Validate([]Rule{
+		{
+			Value:      "12345678",
+			Validators: []Validator{WithLongitude()},
+		},
+	})
+
+	err = Validate([]Rule{
+		{
+			Value:      "35.929673",
+			Validators: []Validator{WithLongitude()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "35",
+			Validators: []Validator{WithLongitude()},
+		},
+	})
+	a.NoError(err)
+	err = Validate([]Rule{
+		{
+			Value:      "-78.948237",
+			Validators: []Validator{WithLongitude()},
 		},
 	})
 	a.NoError(err)
