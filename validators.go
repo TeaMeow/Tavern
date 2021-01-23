@@ -24,8 +24,12 @@ var (
 	ErrDatetime = errors.New("tavern: invalid datetime format")
 	// ErrEmail is invalid email format.
 	ErrEmail = errors.New("tavern: invalid email format")
-	// ErrRegExp is invalid pattern.
-	ErrRegExp = errors.New("invalid pattern")
+	// ErrInvalidJSON is invalid JSON.
+	ErrInvalidJSON = errors.New("tavern: invalid JSON")
+	// ErrInvalidHTML is invalid HTML.
+	ErrInvalidHTML = errors.New("tavern: invalid HTML")
+	// ErrInvalidPattern is invalid pattern.
+	ErrInvalidPattern = errors.New("invalid pattern")
 	// ErrAddress is unresolvable address.
 	ErrAddress = errors.New("tavern: unresolvable address")
 	// ErrURL is invalid url format.
@@ -426,7 +430,7 @@ func WithRegExp(r string) Validator {
 		case string:
 			m, err := regexp.Match(r, []byte(k))
 			if !m || err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -445,7 +449,7 @@ func WithPrefix(p string) Validator {
 		switch k := v.(type) {
 		case string:
 			if !strings.HasPrefix(k, p) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -464,7 +468,7 @@ func WithSuffix(s string) Validator {
 		switch k := v.(type) {
 		case string:
 			if !strings.HasSuffix(k, s) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -483,7 +487,7 @@ func WithAlpha() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpAlphaRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -502,7 +506,7 @@ func WithAlphanumeric() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpAlphaNumericRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -521,7 +525,7 @@ func WithAlphaUnicode() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpAlphaUnicodeRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -540,7 +544,7 @@ func WithAlphanumericUnicode() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpAlphaUnicodeNumericRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -559,7 +563,7 @@ func WithNumeric() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpNumericRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -598,7 +602,7 @@ func WithRGB() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpRgbRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -617,7 +621,7 @@ func WithRGBA() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpRgbaRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -636,7 +640,7 @@ func WithHSL() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpHslRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -655,7 +659,7 @@ func WithHSLA() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpHslaRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -674,11 +678,11 @@ func WithJSON() Validator {
 		switch k := v.(type) {
 		case string:
 			if !json.Valid([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidJSON
 			}
 		case []byte:
 			if !json.Valid(k) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidJSON
 			}
 		default:
 			panic(ErrWrongType)
@@ -712,7 +716,7 @@ func WithBase64() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpBase64Regex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -731,7 +735,7 @@ func WithBase64URL() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpBase64URLRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -750,7 +754,7 @@ func WithBitcoinAddress() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpBtcAddressRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -794,7 +798,7 @@ func WithISBN10() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpISBN10Regex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -813,7 +817,7 @@ func WithISBN13() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpISBN13Regex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -832,7 +836,7 @@ func WithUUID() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpUUIDRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -851,7 +855,7 @@ func WithUUID3() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpUUID3Regex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -861,7 +865,7 @@ func WithUUID3() Validator {
 		switch value.Kind() {
 		case reflect.String:
 			if !regExpUUID3Regex.Match([]byte(value.String())) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -880,7 +884,7 @@ func WithUUID4() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpUUID4Regex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -899,7 +903,7 @@ func WithUUID5() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpUUID5Regex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -918,7 +922,7 @@ func WithASCII() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpASCIIRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -937,7 +941,7 @@ func WithASCIIPrintable() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpASCIIPrintableRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -956,7 +960,7 @@ func WithMultiByte() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpMultibyteRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -975,7 +979,7 @@ func WithDataURI() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpDataURIRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -994,7 +998,7 @@ func WithLatitude() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpLatitudeRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -1013,7 +1017,7 @@ func WithLongitude() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpLongitudeRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidPattern
 			}
 		default:
 			panic(ErrWrongType)
@@ -1033,7 +1037,7 @@ func WithTCPAddress() Validator {
 		case string:
 			_, err := net.ResolveTCPAddr("tcp", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1053,7 +1057,7 @@ func WithTCPv4Address() Validator {
 		case string:
 			_, err := net.ResolveTCPAddr("tcp4", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1073,7 +1077,7 @@ func WithTCPv6Address() Validator {
 		case string:
 			_, err := net.ResolveTCPAddr("tcp6", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1091,9 +1095,9 @@ func WithUDPAddress() Validator {
 
 		switch k := v.(type) {
 		case string:
-			_, err := net.ResolveTCPAddr("udp", k)
+			_, err := net.ResolveUDPAddr("udp", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1111,9 +1115,9 @@ func WithUDPv4Address() Validator {
 
 		switch k := v.(type) {
 		case string:
-			_, err := net.ResolveTCPAddr("udp4", k)
+			_, err := net.ResolveUDPAddr("udp4", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1131,9 +1135,9 @@ func WithUDPv6Address() Validator {
 
 		switch k := v.(type) {
 		case string:
-			_, err := net.ResolveTCPAddr("udp6", k)
+			_, err := net.ResolveUDPAddr("udp6", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1153,7 +1157,7 @@ func WithIPAddress() Validator {
 		case string:
 			_, err := net.ResolveIPAddr("ip", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1163,6 +1167,8 @@ func WithIPAddress() Validator {
 }
 
 // WithIPv4Address requires the value IPv4 address to be resolvable. It validates via the `net.ResolveIPAddr` function.
+//
+// FIX: `::0` is IPv6 but resolvable, WTF GOLANG?
 func WithIPv4Address() Validator {
 	return func(ctx context.Context, v interface{}) (context.Context, error) {
 		if isNotRequiredAndZeroValue(ctx, v) {
@@ -1173,7 +1179,7 @@ func WithIPv4Address() Validator {
 		case string:
 			_, err := net.ResolveIPAddr("ip4", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1193,7 +1199,7 @@ func WithIPv6Address() Validator {
 		case string:
 			_, err := net.ResolveIPAddr("ip6", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1213,7 +1219,7 @@ func WithUnixAddress() Validator {
 		case string:
 			_, err := net.ResolveUnixAddr("unix", k)
 			if err != nil {
-				return ctx, ErrEmail
+				return ctx, ErrAddress
 			}
 		default:
 			panic(ErrWrongType)
@@ -1237,7 +1243,7 @@ func WithHTML() Validator {
 		switch k := v.(type) {
 		case string:
 			if !regExpHTMLRegex.Match([]byte(k)) {
-				return ctx, ErrEmail
+				return ctx, ErrInvalidHTML
 			}
 		default:
 			panic(ErrWrongType)
