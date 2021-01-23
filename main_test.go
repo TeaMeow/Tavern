@@ -1,6 +1,7 @@
 package tavern
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -1175,4 +1176,22 @@ func TestLongitude(t *testing.T) {
 		},
 	})
 	a.NoError(err)
+}
+
+func TestCustomError(t *testing.T) {
+	a := assert.New(t)
+	err := Validate([]Rule{
+		{
+			Value:      "",
+			Validators: []Validator{WithRequired()},
+		},
+	})
+	a.Equal(ErrRequired.Error(), err.Error())
+	err = Validate([]Rule{
+		{
+			Value:      "",
+			Validators: []Validator{WithCustomError(WithRequired(), errors.New("hello"))},
+		},
+	})
+	a.Equal("hello", err.Error())
 }
