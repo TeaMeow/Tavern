@@ -65,3 +65,10 @@ if err != nil {
     panic(err) // 輸出：你在公三小
 }
 ```
+
+## 已知錯誤
+
+-   `WithIPv4Address` 允許 `::0` 而這其實是 IPv6 的東西。
+-   `WithIPAddress`, `WithIPv4Address`, `WithIPv6Address` 允許帶有通訊埠的 IP 位址。
+
+IPAddress 驗證器使用 `net.ResolveIPAddr` 作為驗證基礎，不知道為什麼這些都能通過驗證。

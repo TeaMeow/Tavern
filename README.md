@@ -65,3 +65,10 @@ if err != nil {
     panic(err) // output: nani the fuck
 }
 ```
+
+## Known Bugs
+
+-   `WithIPv4Address` allows `::0` which is IPv6.
+-   `WithIPAddress`, `WithIPv4Address`, `WithIPv6Address` allows IP with port numbers.
+
+IPAddress validators use `net.ResolveIPAddr` as validation, not sure why it is valid.
