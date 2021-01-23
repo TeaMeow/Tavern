@@ -370,54 +370,54 @@ func WithEmail() Validator {
 }
 
 //
-func WithOneOf() {
+/*func WithOneOf() {
 
-}
-
-//
-func WithNotOneOf() {
-
-}
+}*/
 
 //
-func WithIP() {
+/*func WithNotOneOf() {
 
-}
-
-//
-func WithIPv4() {
-
-}
+}*/
 
 //
-func WithIPv6() {
+/*func WithIP() {
 
-}
-
-//
-func WithURL() {
-
-}
+}*/
 
 //
-func WithEqual() {
+/*func WithIPv4() {
 
-}
-
-//
-func WithNotEqual() {
-
-}
+}*/
 
 //
-func WithTrue() {
+/*func WithIPv6() {
 
-}
+}*/
 
 //
-func WithFalse() {
+/*func WithURL() {
 
-}
+}*/
+
+//
+/*func WithEqual() {
+
+}*/
+
+//
+/*func WithNotEqual() {
+
+}*/
+
+//
+/*func WithTrue() {
+
+}*/
+
+//
+/*func WithFalse() {
+
+}*/
 
 // WithRegExp validates the valiue with specified regular expression.
 func WithRegExp(r string) Validator {
@@ -573,24 +573,24 @@ func WithNumeric() Validator {
 }
 
 // WithHexadecimal 會檢查字串是否為十六進制格式。
-func WithHexadecimal() {
+/*func WithHexadecimal() {
 
-}
+}*/
 
 // WithHexColor 會檢查字串是否為 # 井字開頭與結尾 3 或 6 個長度的十六進制格式。
-func WithHexColor() {
+/*func WithHexColor() {
 
-}
+}*/
 
 // WithLowercase 會檢查字串是否僅有小寫英文字母。
-func WithLowercase() {
+/*func WithLowercase() {
 
-}
+}*/
 
 // WithUppercase 會檢查字串是否僅有大寫英文字母。
-func WithUppercase() {
+/*func WithUppercase() {
 
-}
+}*/
 
 // WithRGB requires the value to be a string RGB with `rgb(0,0,0)` format.
 func WithRGB() Validator {
@@ -692,19 +692,19 @@ func WithJSON() Validator {
 }
 
 //
-func WithFilePath() {
+/*func WithFilePath() {
 
-}
-
-//
-func WithURI() {
-
-}
+}*/
 
 //
-func WithURNRFC2141() {
+/*func WithURI() {
 
-}
+}*/
+
+//
+/*func WithURNRFC2141() {
+
+}*/
 
 // WithBase64 requires the value to be a base64 string.
 func WithBase64() Validator {
@@ -764,29 +764,29 @@ func WithBitcoinAddress() Validator {
 }
 
 //
-func WithBitcoinAddressBech32() {
+/*func WithBitcoinAddressBech32() {
 
-}
-
-//
-func WithEthereumAddress() {
-
-}
+}*/
 
 //
-func WithContains() {
+/*func WithEthereumAddress() {
 
-}
-
-//
-func WithNotContains() {
-
-}
+}*/
 
 //
-func WithISBN() {
+/*func WithContains() {
 
-}
+}*/
+
+//
+/*func WithNotContains() {
+
+}*/
+
+//
+/*func WithISBN() {
+
+}*/
 
 // WithISBN10 requires the value to be a valid ISBN10 string.
 func WithISBN10() Validator {
@@ -1229,9 +1229,9 @@ func WithUnixAddress() Validator {
 }
 
 // WithMAC 會驗證一個字串是否為正規的 MAC 地址。
-func WithMAC() {
+/*func WithMAC() {
 
-}
+}*/
 
 // WithHTML requires the value to be a valid HTML.
 func WithHTML() Validator {
@@ -1253,9 +1253,9 @@ func WithHTML() Validator {
 }
 
 // WithHostname 會驗證指定的主機名稱是否可供解析。
-func WithHostname() {
+/*func WithHostname() {
 
-}
+}*/
 
 // WithCustomError accepts a validator with a custom error. It returns the custom error instead of the native Tavern error when the validator didn't pass it's validation. Useful if you are trying to create custom errors for each validation.
 func WithCustomError(validator Validator, err error) Validator {
