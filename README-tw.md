@@ -15,15 +15,15 @@ $ go get github.com/teacat/tavern
 ## 範例
 
 ```go
-err := tavern.Validate([]tavern.Rule{
-    {
-        Value: "你好，世界！",
-        Validators: []tavern.Validator{
-            tavern.WithRequired(),
-            tavern.WithMinLength(5),
-        },
-    },
-})
+err := tavern.Validate(
+    NewRule("你好，世界！",
+        tavern.WithRequired(),
+        tavern.WithMinLength(5),
+    ),
+    NewRule(198964,
+        tavern.WithMin(100),
+    ),
+)
 if err != nil {
     panic(err)
 }
@@ -52,15 +52,12 @@ type Validator func(ctx context.Context, value interface{}) (context.Context, er
 事實上這個函式也是一個驗證器，但會在傳入的驗證器發生錯誤時回傳你自訂的錯誤訊息。
 
 ```go
-err := tavern.Validate([]tavern.Rule{
-    {
-        Value: "",
-        Validators: []tavern.Validator{
-            tavern.WithCustomError(tavern.WithRequired(), errors.New("你在公三小")),
-            tavern.WithMinLength(5),
-        },
-    },
-})
+err := tavern.Validate(
+    NewRule("",
+        tavern.WithCustomError(tavern.WithRequired(), errors.New("你在公三小")),
+        tavern.WithMinLength(5),
+    ),
+)
 if err != nil {
     panic(err) // 輸出：你在公三小
 }

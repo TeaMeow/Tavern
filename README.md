@@ -15,15 +15,15 @@ $ go get github.com/teacat/tavern
 ## Example
 
 ```go
-err := tavern.Validate([]tavern.Rule{
-    {
-        Value: "Hello, world!",
-        Validators: []tavern.Validator{
-            tavern.WithRequired(),
-            tavern.WithMinLength(5),
-        },
-    },
-})
+err := tavern.Validate(
+    NewRule("Hello, world!",
+        tavern.WithRequired(),
+        tavern.WithMinLength(5),
+    ),
+    NewRule(198964,
+        tavern.WithMin(100),
+    ),
+)
 if err != nil {
     panic(err)
 }
@@ -52,15 +52,12 @@ By default, Tavern returns built-in errors such as `ErrRequired`, `ErrLength` mi
 It's also a validator but returns your own custom error when the passed-in validator failed.
 
 ```go
-err := tavern.Validate([]tavern.Rule{
-    {
-        Value: "",
-        Validators: []tavern.Validator{
-            tavern.WithCustomError(tavern.WithRequired(), errors.New("nani the fuck")),
-            tavern.WithMinLength(5),
-        },
-    },
-})
+err := tavern.Validate(
+    NewRule("",
+        tavern.WithCustomError(tavern.WithRequired(), errors.New("nani the fuck")),
+        tavern.WithMinLength(5),
+    ),
+)
 if err != nil {
     panic(err) // output: nani the fuck
 }
